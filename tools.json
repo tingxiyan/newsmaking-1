@@ -1,0 +1,190 @@
+{
+  "tools": [
+    {
+      "name": "calculator",
+      "description": "执行数学计算，例如增长率、比例、平均数、加减乘除、百分比等运算",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "description": "要计算的数学表达式，如 '2+3*5'、'(123000-85000)/85000*100'"
+          }
+        },
+        "required": ["expression"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "float",
+            "description": "计算结果（浮点数或整数）"
+          }
+        }
+      }
+    },
+    {
+      "name": "csv_query",
+      "description": "读取并分析 data/media_cases.csv 媒体案例数据，支持排序、筛选、统计、分组比较、找最大值/最小值等操作",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "description": "操作类型：sort（排序）、filter（筛选）、max（找最大值行）、min（找最小值行）、stats（统计）、all（获取全部）、group（分组统计）"
+          },
+          "column": {
+            "type": "string",
+            "description": "操作的列名，如 negative_rate、views、platform 等"
+          },
+          "order": {
+            "type": "string",
+            "description": "排序方向：asc（升序）或 desc（降序），用于 sort 操作"
+          },
+          "condition": {
+            "type": "string",
+            "description": "筛选条件，用于 filter 操作，如 'topic=教育科技'"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "返回的行数限制，默认返回全部"
+          }
+        },
+        "required": ["operation"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "description": "查询结果列表，每行为一个字典"
+          },
+          "summary": {
+            "type": "string",
+            "description": "结果摘要说明"
+          }
+        }
+      }
+    },
+    {
+      "name": "policy_lookup",
+      "description": "查询 data/ai_news_policy.md 中的AI新闻伦理课程规范或新闻规则",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "要查询的问题或关键词，如 'AI采访引语是否可以使用'、'审核要求'"
+          }
+        },
+        "required": ["query"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "type": "string",
+            "description": "完整的政策内容"
+          },
+          "relevant": {
+            "type": "array",
+            "description": "与查询最相关的条款列表"
+          }
+        }
+      }
+    },
+    {
+      "name": "text_analyzer",
+      "description": "使用LLM分析文本内容，例如提取关键词、判断情绪倾向（正面/负面/中性）、识别风险表述、检测是否包含未经证实的说法",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "要分析的文本内容"
+          },
+          "analysis_type": {
+            "type": "string",
+            "description": "分析类型：sentiment（情绪倾向）、keywords（关键词）、risk（风险表述）、fact_check（未经证实说法检测）、all（全部分析）"
+          }
+        },
+        "required": ["text", "analysis_type"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "sentiment": {
+            "type": "string",
+            "description": "情绪倾向：正面/负面/中性"
+          },
+          "sentiment_score": {
+            "type": "float",
+            "description": "情绪分值，-1为最负面，1为最正面"
+          },
+          "keywords": {
+            "type": "array",
+            "description": "关键词列表"
+          },
+          "risk_terms": {
+            "type": "array",
+            "description": "风险表述列表"
+          },
+          "unverified_claims": {
+            "type": "array",
+            "description": "未经证实的说法列表"
+          },
+          "summary": {
+            "type": "string",
+            "description": "分析摘要"
+          }
+        }
+      }
+    },
+    {
+      "name": "final_answer",
+      "description": "Agent决策：不再调用工具，直接输出最终回答",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "description": "对用户任务的最终回答"
+          }
+        },
+        "required": ["answer"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "description": "最终回答"
+          }
+        }
+      }
+    },
+    {
+      "name": "ask_clarification",
+      "description": "Agent决策：信息不足，需要向用户追问获取更多信息",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "向用户追问的问题"
+          }
+        },
+        "required": ["question"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "追问的问题"
+          }
+        }
+      }
+    }
+  ]
+}
